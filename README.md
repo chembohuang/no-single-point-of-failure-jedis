@@ -1,0 +1,1 @@
+A java redis failover solution based on java-code. Switch automatically when the master is down.

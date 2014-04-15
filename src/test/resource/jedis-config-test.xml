@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
+        
+    	<!-- memcached configuration, for comparison. -->
+        <!-- 
+        <bean id="memcachedPool" class="com.whalin.MemCached.SockIOPool" factory-method="getInstance"  
+        init-method="initialize" destroy-method="shutDown">  
+        <constructor-arg><value>neeaMemcachedPool</value></constructor-arg>  
+        <property name="servers">  
+            <list>  
+                <value>10.103.124.223:11211</value>
+            </list>  
+        </property>  
+        <property name="initConn"><value>50</value></property>  
+        <property name="minConn"><value>50</value></property>  
+        <property name="maxConn"><value>500</value></property>  
+        <property name="maintSleep"><value>30</value></property>  
+        <property name="nagle"><value>false</value></property>  
+        <property name="socketTO"><value>3000</value></property>  
+           
+        <property name="initConn"><value></value></property>  
+        <property name="initConn"><value></value></property>  
+    </bean>  
+      
+    <bean id="memcachedClient" class="com.whalin.MemCached.MemCachedClient">  
+        <constructor-arg><value>neeaMemcachedPool</value></constructor-arg>  
+    </bean>   -->
+    
+    
+    <!-- jedis configuration -->
+    
+ 	<bean id="config" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+ 		<property name="maxTotal" value="200"></property>  
+        <property name="maxIdle" value="50"></property> 
+        <property name="minIdle" value="10"></property> 
+        <property name="maxWaitMillis" value="15000"></property>  
+        <property name="lifo" value="true"></property>
+        <property name="blockWhenExhausted" value="true"></property>
+        <property name="testOnBorrow" value="false"></property>
+        <property name="testOnReturn" value="false"></property>
+        <property name="testWhileIdle" value="false"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="30000"></property>
+ 	</bean>
+ 	
+    <bean id="jedisCluster" class="com.csair.wx.cache.redis.FailoverJedisCluster" init-method="init">
+    	<property name="redisServers"  value="10.92.2.61:6379,10.92.2.60:6379" />
+    </bean>
+    
+    <!-- do not change this name: jedisPool. it's used in FailoverJedisIntercepter to get the FailoverJedisPool instance.-->
+    <bean id="jedisPool" class="com.csair.wx.cache.redis.FailoverJedisPool">
+    	<constructor-arg type="org.apache.commons.pool2.impl.GenericObjectPoolConfig" ref="config" />
+    	<constructor-arg type="com.csair.wx.cache.redis.FailoverJedisCluster" ref="jedisCluster" />
+    	<constructor-arg type="org.apache.commons.pool2.impl.AbandonedConfig" ref="abandonConfig" />
+    </bean>
+    
+    <bean id="abandonConfig" class="org.apache.commons.pool2.impl.AbandonedConfig">
+		<property name="removeAbandonedTimeout" value="10"></property>
+		<property name="removeAbandonedOnBorrow" value="true"></property>
+		<property name="removeAbandonedOnMaintenance" value="true"></property>
+	</bean>
+	
+    <bean class="com.csair.wx.cache.redis.util.SpringContextutil" />
+</beans>

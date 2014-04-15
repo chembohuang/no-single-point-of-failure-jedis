@@ -10,7 +10,7 @@ A java redis failover solution based on java-code. Switch automatically when the
 
 Usage
 ----
-1.The following description is a way to use FailoverJedisPool within the Spring container. If you are not using the spring, you can always use the 'new way' to instantiate a FailoverJedisPool object as long as you can pass the jedisPool FailoverJedisPool instance to the FailoverJedisIntercepter.
+1.The following description is a way to use FailoverJedisPool within the Spring container. If you are not using the spring, you can always use the 'new way' to instantiate a FailoverJedisPool object as long as you can pass the FailoverJedisPool instance to the FailoverJedisIntercepter.
 
 ```xml
 <!-- jedis configuration starts-->

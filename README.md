@@ -10,6 +10,25 @@ A java redis failover solution based on java-code. Switch automatically when the
 
 Usage
 ----
+0.pom.xml adds dependences:
+```xml
+<dependency>  
+        <groupId>redis.clients</groupId>  
+        <artifactId>jedis</artifactId>  
+        <version>2.4.1</version>  
+    </dependency>  
+    <dependency>  
+      <groupId>org.ow2.asm</groupId>  
+      <artifactId>asm-util</artifactId>  
+      <version>4.0</version>  
+    </dependency>  
+    <dependency>  
+        <groupId>cglib</groupId>  
+        <artifactId>cglib</artifactId>  
+        <version>3.0</version>  
+    </dependency>  
+```
+
 1.The following description is a way to use FailoverJedisPool within the Spring container. If you are not using the spring, you can always use the 'new way' to instantiate a FailoverJedisPool object as long as you can pass the FailoverJedisPool instance to the FailoverJedisIntercepter.
 
 ```xml

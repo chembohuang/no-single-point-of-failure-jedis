@@ -3,56 +3,44 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.csair.wx.cache.redis</groupId>
-	<artifactId>nspf-jedis</artifactId>
+	<artifactId>nspf-redis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>nspf-jedis</name>
+
+	<name>nspf</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	 
-	<!-- <pluginRepositories>
-		<pluginRepository>   
-			<id>nexus</id>
-			<url>http://10.108.66.139:9081/nexus/content/groups/public/</url>
-		</pluginRepository>
-	</pluginRepositories>  
-
-	<repositories>
-		<repository>  
-			<id>nexus</id>
-			<url>http://10.108.66.139:9081/nexus/content/groups/public/</url>
-		</repository>
-	</repositories> -->
 	
-   	<repositories>
-   		<repository>
-   			<id>nexus</id>
-   			<name>local private nexus</name>
-   			<url>http://maven.oschina.net/content/groups/public/</url>
-   			<releases>
-   				<enabled>true</enabled>
-   			</releases>
-   			<snapshots>
-   				<enabled>false</enabled>
-   			</snapshots>
-   		</repository>
-   	</repositories>
-   	<pluginRepositories>
-   		<pluginRepository>
-   			<id>nexus</id>
-   			<name>local private nexus</name>
-   			<url>http://maven.oschina.net/content/groups/public/</url>
-   			<releases>
-   				<enabled>true</enabled>
-   			</releases>
-   			<snapshots>
-   				<enabled>false</enabled>
-   			</snapshots>
-   		</pluginRepository>
-   	</pluginRepositories>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>local private nexus</name>
+			<url>http://maven.oschina.net/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>nexus</id>
+			<name>local private nexus</name>
+			<url>http://maven.oschina.net/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 	
 	<dependencies>
 		<dependency>
@@ -60,25 +48,25 @@
 			<artifactId>commons-pool2</artifactId>
 			<version>2.1</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm-util</artifactId>
-			<version>3.2</version>
-		</dependency> -->
-		<dependency>
+		<!--<dependency>
 			<groupId>com.whalin</groupId>
 			<artifactId>Memcached-Java-Client</artifactId>
 			<version>3.0.1</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.15.0-GA</version>
 		</dependency>
 		<dependency>
-		  <groupId>org.javassist</groupId>
-	<artifactId>javassist</artifactId>
-	<version>3.15.0-GA</version>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-util</artifactId>
+			<version>4.0</version>
 		</dependency>
-				<dependency>
-		  <groupId>org.ow2.asm</groupId>
-		  <artifactId>asm-util</artifactId>
-		  <version>4.0</version>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -95,11 +83,6 @@
 					<groupId>org.apache.commons</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>3.1.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -142,39 +125,5 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.5</version>
 		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.1.38</version>
-		</dependency>
-		<dependency>
-			<groupId>com.esotericsoftware.kryo</groupId>
-			<artifactId>kryo</artifactId>
-			<version>2.23.0</version>
-		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>wx-nspof-redis</id>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<jarName>wx-nspof-redis</jarName>
-							<includes>
-								<include>**/wx/cache/redis/**</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

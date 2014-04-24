@@ -64,7 +64,7 @@ public class FailoverJedisCluster {
         List<JedisShardInfo> hostAndPortList;
         if (null != redisServers && 0 < redisServers.length()) {
             final String[] hostDefs = redisServers.split(",");
-            if (null != hostDefs && 2 <= hostDefs.length) {
+            if (null != hostDefs && 1 <= hostDefs.length) {
                 hostAndPortList = new ArrayList<JedisShardInfo>(
                         hostDefs.length);
                 for (String hostDef : hostDefs) {

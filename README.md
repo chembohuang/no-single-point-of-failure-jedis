@@ -27,6 +27,11 @@ Usage
         <artifactId>cglib</artifactId>  
         <version>3.0</version>  
     </dependency>  
+	<dependency>
+	  <groupId>com.alibaba</groupId>
+	  <artifactId>fastjson</artifactId>
+	  <version>1.1.39</version>
+	</dependency>
 ```
 
 1.The following description is a way to use FailoverJedisPool within the Spring container. If you are not using the spring, you can always use the 'new way' to instantiate a FailoverJedisPool object as long as you can pass the FailoverJedisPool instance to the FailoverJedisIntercepter.

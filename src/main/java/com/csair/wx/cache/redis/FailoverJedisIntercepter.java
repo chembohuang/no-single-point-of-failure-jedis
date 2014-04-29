@@ -82,14 +82,13 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
     @Override
     public Object intercept(Object object, Method method, Object[] args,
             MethodProxy methodProxy) throws Throwable {
+    	//filters the methods that doesn't need to be proxied.
+    	//so don't call these methods through the proxy instance, like:  
         if (method.getName().equals("getIdentity")
                 || method.getName().equals("hashCode")
                 || method.getName().equals("equals")
                 || method.getName().equals("toString")
                 || method.getName().equals("ping")
-                /*|| method.getName().equals("isConnected")
-                || method.getName().equals("disconnect")
-                || method.getName().equals("quit")*/
                 ) {
             try {
                 return method.invoke(master, args);
@@ -98,13 +97,14 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
             }
         }
         Object result = null;
+        boolean doneInvoke = false;
         int i = 0;
-        //two chances to invoke the method, if fail in second time, throws exception.
-        while (result == null && i < 2) {
+        //two chances to invoke the method, if fails for the second time, throws the exception.
+        while (!doneInvoke && i < 2) {
             i++;
             try {
                 result = method.invoke(master, args);
-                if (i == 1) {// cause the proxy of the second time isn't from the pool, do not need to return. 
+                if (i == 1) {// because the proxy of the second time isn't from the pool, do not need to return. 
                     try {
                         pool.returnResourceObject(master);
                     } catch (Exception e) {
@@ -112,9 +112,10 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
                         pool.returnBrokenResource(master);
                     }
                 }
+                doneInvoke = true;
             } catch (InvocationTargetException ex) {
                 logger.error(ex.getMessage(), ex);
-                logger.info("invoke redis error, now reselect new master and try again and i="+i);
+                logger.info("invoke redis error, now reselect a new master and try again and i="+i);
                 if (i == 2) {
                     throw ex;
                 }
@@ -126,28 +127,4 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
         }
         return result;
     }
-    /*public void destroyProxy() {
-        try {
-            if(master != null){
-                master.quit();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public boolean validateProxy() {
-        if(master == null){
-            return false;
-        }
-        try {
-            if (FailoverJedisCluster.isHealthy(master)){
-                return true;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-        return false;
-    }*/
 }

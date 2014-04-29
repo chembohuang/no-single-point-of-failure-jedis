@@ -27,23 +27,15 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 public class FailoverJedisPool extends Pool<JedisFacade> {
     
     public FailoverJedisPool(final  GenericObjectPoolConfig poolConfig,
-            FailoverJedisCluster cluster,AbandonedConfig abandonedConfig) {
+            final FailoverJedisCluster cluster,final AbandonedConfig abandonedConfig) {
         super(poolConfig, new FailoverJedisFactory(cluster),abandonedConfig);
     }
    
     /**
-     * do not cache me. call it directly when you use it.
+     * do not cache me. call it directly when you use it. i.e. jedisPool.getJedis().saveOrUpdate("myKey", someSerializeType);
      * @return
      */
     public JedisFacade getJedis() {
         return getResource();
     }
-
-   /* public void returnJedis(JedisFacade j) {
-        returnResource(j);
-    }
-    
-    public void returnBrokenJedis(JedisFacade j) {
-        returnBrokenResource(j);
-    }*/
 } 

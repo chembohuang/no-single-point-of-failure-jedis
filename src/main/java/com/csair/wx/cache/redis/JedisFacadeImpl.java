@@ -96,7 +96,7 @@ public class JedisFacadeImpl extends Jedis implements JedisFacade {
             /*this.set(key.getBytes(), SerializationUtils.serialize(object));
             return this.expire(key.getBytes(), expiredSeconds);*/
         	this.set(key, JSON.toJSONString(object));
-        	return this.expire(key,DEFAULT_EXPIRED_SECOND);
+        	return this.expire(key,expiredSeconds);
         }
         return null;
     }

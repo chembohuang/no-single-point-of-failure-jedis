@@ -1,4 +1,4 @@
-no-single-poing-of-failure jedis
+sdno-single-poing-of-failure jedis
 =========
 
 A java redis failover solution based on java-code. Switch automatically when the master is down.
@@ -94,28 +94,29 @@ or set it with an expired seconds:
 Performance VS spymemcached(8G memory/E7-4820)
 ----
 1.Object:String ; single thread write & read:  10000 times
-failoverJedis:	18517
-spymemcached:	11301
+* failoverJedis:	18517
+* spymemcached:	11301
 
 2.Object:String ; 1000 concurrent write and read per second for 10 seconds:
-failoverJedis:	12251
-spymemcached:	11637
+* failoverJedis:	12251
+* spymemcached:	11637
 
 3.Object:complicated object(pojo contains pojo,list,string and integer),single thread write & read:  10000 times
-failoverJedis:	20985
-spymemcached:	13750
+* failoverJedis:	20985
+* spymemcached:	13750
 
 4.Object:complicated object(pojo contains pojo,list,string and integer),1000 concurrent write and read per second for 10 seconds:
-failoverJedis:	11744
-spymemcached:	11927
-5000 concurrent write and read per second for 10 seconds:
-failoverJedis:	21564
-spymemcached:	23560(timeout occurs)
+* failoverJedis:	11744
+* spymemcached:	11927
+
+    5000 concurrent write and read per second for 10 seconds:
+* failoverJedis:	21564
+* spymemcached:	23560(timeout occurs)
 
 5.Object:1Mb string,single thread write & read:  10000 times
-failoverJedis:	68031
-spymemcached:	80579
+* failoverJedis:	68031
+* spymemcached:	80579
 
 6.Object:1Mb string,200 concurrent write and read per second for 10 seconds:
-failoverJedis:	25119
-spymemcached:	21716
+* failoverJedis:	25119
+* spymemcached:	21716

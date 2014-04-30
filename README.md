@@ -91,8 +91,7 @@ or set it with an expired seconds:
 ```java
     SomeSerializeObject g = jedisPool.getJedis().getValue("myKey", SomeSerializeObject.class);
 ```
-Performance VS spymemcached
-(8G memory/E7-4820)
+Performance VS spymemcached(8G memory/E7-4820)
 ----
 1.Object:String ; single thread write & read:  10000 times
 failoverJedis:	18517

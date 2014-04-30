@@ -108,12 +108,12 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
                     try {
                         pool.returnResourceObject(master);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                    	logger.error(e);
                         pool.returnBrokenResource(master);
                     }
                 }
                 doneInvoke = true;
-            } catch (InvocationTargetException ex) {
+            } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
                 logger.info("invoke redis error, now reselect a new master and try again and i="+i);
                 if (i == 2) {

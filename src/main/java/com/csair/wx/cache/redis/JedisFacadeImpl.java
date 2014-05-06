@@ -2,12 +2,11 @@ package com.csair.wx.cache.redis;
 
 import java.net.URI;
 
-import org.springframework.util.SerializationUtils;
-
-import com.alibaba.fastjson.JSON;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
  * 
@@ -25,6 +24,8 @@ public class JedisFacadeImpl extends Jedis implements JedisFacade {
     
     private String host;
     
+    private SerializerFeature[] featureArr = { SerializerFeature.WriteClassName };
+
     private int port;
     
     public JedisFacadeImpl(final String host) {
@@ -95,7 +96,7 @@ public class JedisFacadeImpl extends Jedis implements JedisFacade {
         if (null != object) {
             /*this.set(key.getBytes(), SerializationUtils.serialize(object));
             return this.expire(key.getBytes(), expiredSeconds);*/
-        	this.set(key, JSON.toJSONString(object));
+        	this.set(key, JSON.toJSONString(object,featureArr));
         	return this.expire(key,expiredSeconds);
         }
         return null;

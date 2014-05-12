@@ -2,11 +2,10 @@ package com.csair.wx.cache.redis;
 
 import java.net.URI;
 
+import org.springframework.util.SerializationUtils;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
  * 
@@ -24,7 +23,7 @@ public class JedisFacadeImpl extends Jedis implements JedisFacade {
     
     private String host;
     
-    private SerializerFeature[] featureArr = { SerializerFeature.WriteClassName };
+    /*private SerializerFeature[] featureArr = { SerializerFeature.WriteClassName};*/
 
     private int port;
     
@@ -83,31 +82,17 @@ public class JedisFacadeImpl extends Jedis implements JedisFacade {
     }
     
     @Override
-    public Long saveOrUpdate(String key, Object object) {
+    public String saveOrUpdate(String key, Object object) {
         return this.saveOrUpdate(key, object, DEFAULT_EXPIRED_SECOND);
     }
     
     @Override
-    public Long saveOrUpdate(String key, Object object, int expiredSeconds) {
-        /*
-         * this.set(key, JSON.toJSONString(object)); this.expire(key,
-         * DEFAULT_EXPIRED_SECOND);
-         */
-        if (null != object) {
-            /*this.set(key.getBytes(), SerializationUtils.serialize(object));
-            return this.expire(key.getBytes(), expiredSeconds);*/
-        	this.set(key, JSON.toJSONString(object,featureArr));
-        	return this.expire(key,expiredSeconds);
-        }
-        return null;
+    public String saveOrUpdate(String key, Object object, int expiredSeconds) {
+        return this.setex(key.getBytes(),expiredSeconds, SerializationUtils.serialize(object));
     }
     
     @Override
     public <T> T getValue(String key, Class<T> type) {
-         return JSON.parseObject(this.get(key), type); 
-        /*if(type.isInstance(String.class)){
-            return (T)get(key);
-        }
-        return (T) SerializationUtils.deserialize(this.get(key.getBytes()));*/
+        return (T) SerializationUtils.deserialize(this.get(key.getBytes()));
     }
 }

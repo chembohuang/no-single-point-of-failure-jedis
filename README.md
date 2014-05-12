@@ -3,7 +3,7 @@ sdno-single-poing-of-failure jedis
 
 A java redis failover solution based on java-code. Switch automatically when the master is down.
 * Use common-pool2 as the jedis-pool.
-* Use the fastJson  Serialize and deserialize an object, you may want to use Kryo or whatever you like instead, just change the code in JedisFacadeImpl.java.
+* Use JDK to  Serialize and deserialize an object, you may want to use Kryo or Fastjson or whatever you like instead, just change the code in JedisFacadeImpl.java.
 * Base on jedis 2.4.1 (the latest version)
 * Redis servers are master-slave relationship, one master and multiple slaves. But you don't need to configure this relationship by using the command ```slave of ``` in the ```redis.conf``` file , the code will do the job.
 * Do not cache the JedisFacade instance. Whenever you want it, you call it from the jedisPool directly, like ```jedisPool.getJedis()```, because the instance that you borrow from the pool need to return to the pool after you finish your call. And the return job will be done by the code automatically, since we proxied the FedisFacade with the cglib.
@@ -27,11 +27,6 @@ Usage
         <artifactId>cglib</artifactId>  
         <version>3.0</version>  
     </dependency>  
-	<dependency>
-	  <groupId>com.alibaba</groupId>
-	  <artifactId>fastjson</artifactId>
-	  <version>1.1.39</version>
-	</dependency>
 ```
 
 1.The following description is a way to use FailoverJedisPool within the Spring container. If you are not using the spring, you can always use the 'new way' to instantiate a FailoverJedisPool object as long as you can pass the FailoverJedisPool instance to the FailoverJedisIntercepter.

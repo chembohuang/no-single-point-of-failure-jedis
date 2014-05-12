@@ -21,6 +21,8 @@ import net.sf.cglib.proxy.MethodProxy;
 import org.apache.log4j.Logger;
 
 import redis.clients.jedis.JedisShardInfo;
+import redis.clients.jedis.exceptions.JedisDataException;
+import redis.clients.jedis.exceptions.JedisException;
 
 import com.csair.wx.cache.redis.util.SpringContextutil;
 
@@ -82,13 +84,17 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
     @Override
     public Object intercept(Object object, Method method, Object[] args,
             MethodProxy methodProxy) throws Throwable {
+    	 if (method.getName().equals("finalize")){
+         	return null;
+         }
     	//filters the methods that doesn't need to be proxied.
     	//so don't call these methods through the proxy instance, like:  
-        if (method.getName().equals("getIdentity")
+    	if (method.getName().equals("getIdentity")
                 || method.getName().equals("hashCode")
                 || method.getName().equals("equals")
                 || method.getName().equals("toString")
                 || method.getName().equals("ping")
+                || method.getName().equals("info")
                 ) {
             try {
                 return method.invoke(master, args);
@@ -103,7 +109,7 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
         while (!doneInvoke && i < 2) {
             i++;
             try {
-                result = method.invoke(master, args);
+            	result = method.invoke(master, args);
                 if (i == 1) {// because the proxy of the second time isn't from the pool, do not need to return. 
                     try {
                         pool.returnResourceObject(master);
@@ -113,16 +119,23 @@ public class FailoverJedisIntercepter implements MethodInterceptor {
                     }
                 }
                 doneInvoke = true;
-            } catch (Exception ex) {
-                logger.error(ex.getMessage(), ex);
-                logger.info("invoke redis error, now reselect a new master and try again and i="+i);
-                if (i == 2) {
-                    throw ex;
-                }
-                pool.returnBrokenResource(master);
-                master = null;
-                cluster.electNewMaster();
-                initMaster();
+            }  catch (InvocationTargetException ex) {
+            	try{
+            		throw ex.getTargetException();
+            	}catch(JedisException e){
+            		logger.error(e.getMessage(),e);
+            		logger.error(Thread.currentThread().getId()+"  invoke redis error, i="+i);
+                	if (i == 2) {
+                        throw e;
+                    }
+                    pool.returnBrokenResource(master);
+                    master = null;
+                    cluster.electNewMaster();
+                    initMaster();
+            	}
+            }
+            catch(Exception e){
+            	logger.error(e.getMessage(),e);
             }
         }
         return result;

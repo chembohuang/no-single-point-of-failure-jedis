@@ -30,9 +30,9 @@ public interface JedisFacade extends BasicCommands, BinaryJedisCommands,
     
     void disconnect();
 
-    Long saveOrUpdate(String key,Object object);
+    String saveOrUpdate(String key,Object object);
     
     <T> T getValue(String key,Class<T> type);
     
-    Long saveOrUpdate(String key,Object object,int expiredSeconds);
+    String saveOrUpdate(String key,Object object,int expiredSeconds);
 }

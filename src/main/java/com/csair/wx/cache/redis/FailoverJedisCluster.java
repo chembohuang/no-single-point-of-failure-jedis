@@ -116,16 +116,19 @@ public class FailoverJedisCluster {
     }
     
     public JedisShardInfo electNewMaster() {
+    	logger.info(Thread.currentThread().getId()+"  enter elect new master.");
         synchronized (lock) {
-            while (elected == null || !isHealthy(elected)) {
-                if (null != elected) {
+            while (elected == null || !isHealthy(elected) || isSlave(elected)) {
+        	//while (elected == null || !isHealthy(elected) ) {
+                /*if (null != elected) {
                     handleSickMember(elected);
-                }
+                }*/
+            	logger.info(Thread.currentThread().getId()+"  into elect section.");
                 elected = null;
                 for (int i = 0; i < healthMembers.size(); i++) {
                     JedisShardInfo m = healthMembers.get(i);
                     if (isHealthy(m)) {
-                        logger.info("new master has been elected." + m.toString());
+                        logger.info(Thread.currentThread().getId()+"  new master has been elected." + m.toString());
                         elected = m;
                         resetMaster(m);
                         return elected;
@@ -200,6 +203,11 @@ public class FailoverJedisCluster {
     public boolean isHealthy(JedisShardInfo info) {
         JedisFacade jedis = jedisMap.get(info);
         return isHealthy(jedis);
+    } 
+    public boolean isSlave(JedisShardInfo info) {
+        JedisFacade jedis = jedisMap.get(info);
+        logger.info("is it slave?");
+        return jedis.info("Replication").indexOf("role:master")<0;
     }
     
     public static boolean isHealthy(JedisFacade jedis) {
